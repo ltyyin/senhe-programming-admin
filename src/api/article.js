@@ -1,46 +1,39 @@
 import request from "@/utils/request";
 
-export function getCategoryListData() {
+export function getArticleList() {
   return request({
-    url: "/articles/category",
+    url: "/articles",
     method: "get",
   });
 }
 
-export function getCategorySearch(params) {
+export function queryArticle(params) {
   return request({
-    url: "/articles/category/search",
+    url: "/articles/query",
     method: "get",
     params,
   });
 }
 
-export function addCategory(data) {
+export function auditSuccess(id) {
   return request({
-    url: "/articles/category/add",
-    method: "post",
-    data,
-  });
-}
-
-export function updateCategory(id) {
-  return request({
-    url: "/articles/category/modify",
-    method: "patch",
-    data: { id },
-  });
-}
-
-export function deleteCategory(id) {
-  return request({
-    url: `/articles/category/${id}`,
-    method: "delete",
-  });
-}
-
-export function getNormalList() {
-  return request({
-    url: "/articles/normal-list",
+    url: "/articles/audit/success",
     method: "get",
+    params: { id },
+  });
+}
+
+export function auditFail(id) {
+  return request({
+    url: "/articles/audit/fail",
+    method: "get",
+    params: { id },
+  });
+}
+
+export function deleteArticle(id) {
+  return request({
+    url: `/articles/${id}`,
+    method: "delete",
   });
 }

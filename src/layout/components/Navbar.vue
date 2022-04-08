@@ -15,7 +15,7 @@
         <!-- <img :src="avatar" class="user-avatar" />
           <span>大叔</span>
           <i class="el-icon-caret-bottom" />
-        </div> -->
+        </div>-->
         <div class="avatar-container">
           <img :src="avatar" alt="头像" style="width: 40px; height: 40px" />
         </div>

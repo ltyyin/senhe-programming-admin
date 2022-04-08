@@ -1,51 +1,26 @@
 <template>
   <div class="container-edit">
-    <el-dialog
-      :title="title"
-      :visible.sync="isVisible"
-      custom-class="dialog-container"
-    >
-      <el-form
-        :model="formData"
-        ref="ruleForm"
-        :rules="rules"
-        label-position="left"
-      >
-        <el-form-item
-          label="标签名称："
-          prop="name"
-          :label-width="formLabelWidth"
-        >
+    <el-dialog :title="title" :visible.sync="isVisible" custom-class="dialog-container">
+      <el-form :model="formData" ref="ruleForm" :rules="rules" label-position="left">
+        <el-form-item label="标签名称：" prop="name" :label-width="formLabelWidth">
           <el-input v-model.trim="formData.name" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item
-          label="分类名称："
-          prop="categoryName"
-          :label-width="formLabelWidth"
-        >
-          <el-select
-            v-model="formData.categoryName"
-            filterable
-            clearable
-            placeholder="请选择"
-          >
+        <el-form-item label="分类名称：" prop="categoryName" :label-width="formLabelWidth">
+          <el-select v-model="formData.categoryName" filterable clearable placeholder="请选择">
             <el-option
               v-for="category in categoryList"
               :key="category.id"
               :label="category.name"
               :value="category.name"
-            >
-            </el-option>
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="isVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm')"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>

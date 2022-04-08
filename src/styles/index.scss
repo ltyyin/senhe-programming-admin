@@ -63,3 +63,31 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+
+// 自定义公共样式
+.pagination-wrapper {
+  @include flexLayout($jc: flex-start, $ai: center);
+  height: 50px;
+  padding-left: 15px;
+}
+
+.form-search {
+  @include flexLayout($jc: flex-start, $ai: center);
+  padding-left: 20px;
+  border-bottom: 1px solid #ebeef5;
+  height: 70px;
+  // 穿透elementUi表单的样式
+  .el-form-item {
+    margin-bottom: 0;
+  }
+  .btn-form-item {
+    min-width: 240px;
+  }
+  .btn-form-item {
+    button:not(:nth-child(2)) {
+      background-color: $theme-color;
+      color: #fff;
+    }
+  }
+}
