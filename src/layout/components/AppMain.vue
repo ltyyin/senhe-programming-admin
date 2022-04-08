@@ -30,7 +30,7 @@ export default {
   position: relative;
   overflow: hidden;
   background-color: #f3f3f3;
-  padding: 20px 20px 0;
+  padding: 20px 15px 0;
 }
 // .fixed-header + .app-main {
 /* padding-top: 50px; */

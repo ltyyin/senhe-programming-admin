@@ -29,6 +29,16 @@ module.exports = {
   assetsDir: "static",
   lintOnSave: process.env.NODE_ENV === "development",
   productionSourceMap: false,
+  // 全局引入变量和混合
+  css: {
+    loaderOptions: {
+      sass: {
+        prependData: `
+          @import "@/styles/variables.scss";
+          @import "@/styles/mixin.scss";`,
+      },
+    },
+  },
   devServer: {
     port: port,
     open: true,

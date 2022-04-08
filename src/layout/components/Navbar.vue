@@ -10,11 +10,16 @@
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <img :src="avatar" class="user-avatar" />
+        <!-- <div class="avatar-wrapper"> -->
+        <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+        <!-- <img :src="avatar" class="user-avatar" />
+          <span>大叔</span>
           <i class="el-icon-caret-bottom" />
+        </div> -->
+        <div class="avatar-container">
+          <img :src="avatar" alt="头像" style="width: 40px; height: 40px" />
         </div>
+
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>首页</el-dropdown-item>
@@ -44,6 +49,7 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
+      console.log(this.avatar);
     },
     async logout() {
       await this.$store.dispatch("user/logout");

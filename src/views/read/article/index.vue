@@ -1,11 +1,15 @@
 <template>
-  <div>文章管理</div>
+  <div class="article-container"></div>
 </template>
 
 <script>
 export default {
-  name: "ArticleIndex",
+  name: "Article",
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.article-container {
+  @include roundContainer;
+}
+</style>

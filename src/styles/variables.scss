@@ -4,19 +4,20 @@
 // $subMenuActiveText:#f4f4f5; //https://github.com/ElemeFE/element/issues/12951
 
 $menuText:#7f7f7f;
-$menuActiveText:#1eddb2;
-// $subMenuActiveText:#1ab994; 
+// $menuActiveText:#1eddb2;
+$menuActiveText: #38ceb1;
 $subMenuActiveText: #38ceb1;
 
 // $menuBg:#304156;
 // $menuHover:#263445;
 $menuBg: #FFF;
-$menuHover: #dddddd;
+$menuHover: rgb(236, 248, 243);
 
 // $subMenuBg:#1f2d3d;
 // $subMenuHover:#001528;
-$subMenuBg: #efefef;
-$subMenuHover: #dddddd;
+// $subMenuBg: #efefef;
+$subMenuBg: #f1f1f1;
+$subMenuHover: rgb(236, 248, 243);
 
 $sideBarWidth: 210px;
 
@@ -32,3 +33,6 @@ $sideBarWidth: 210px;
   subMenuHover: $subMenuHover;
   sideBarWidth: $sideBarWidth;
 }
+
+$theme-color-light: #1eddb2;
+$theme-color: #42b983;

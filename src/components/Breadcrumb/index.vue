@@ -74,11 +74,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// 自定义样式
-.el-breadcrumb__inner a:hover {
-  color: rgb(30 221 178);
-}
-
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
