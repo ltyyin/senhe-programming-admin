@@ -1,58 +1,66 @@
 <template>
-  <div class="category-container">
-    <el-form :inline="true" :model="searchFormData" size="mini" style="width: 100%"
-      class="form-search">
-      <el-form-item label="分类名称：">
-        <el-input v-model="searchFormData.name"></el-input>
-      </el-form-item>
-      <el-form-item label="状态：">
-        <el-select v-model.trim="searchFormData.status" filterable clearable>
-          <el-option label="禁用" :value="0"></el-option>
-          <el-option label="正常" :value="1"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item class="btn-form-item">
-        <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
-        <el-button icon="el-icon-refresh" @click="onReset">重置</el-button>
-        <el-button icon="el-icon-circle-plus-outline" @click="addCategory">新增</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!-- 数据表格的展示 -->
-    <el-table ref="singleTable" :data="
-        listData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      " highlight-current-row style="width: 100%" stripe>
-      <el-table-column align="center" :index="setIndex" type="index" width="50"></el-table-column>
-      <el-table-column property="name" label="分类名称" min-width="100" align="center">
-      </el-table-column>
-      <el-table-column property="sort" label="排序" width="60" align="center"></el-table-column>
-      <el-table-column property="remark" label="备注" align="center" min-width="200">
-      </el-table-column>
-      <el-table-column label="状态" align="center" width="80">
-        <template v-slot="{ row }">
-          <el-tag :type="row.status | statusFilter" size="small">
-            {{ row.status === 0 ? "禁用" : "正常" }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" min-width="150">
-        <template v-slot="{ row }">
-          <el-button size="mini" @click="handlerEdit(row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="handlerDel(row.id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- 分页功能模块 -->
-    <div class="pagination-wrapper">
-      <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
-        :page-sizes="[10, 15, 20, 50]" :page-size.sync="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total" background
-        popper-class="drop-down-box"></el-pagination>
+  <div class="category-container-wrapper">
+    <div class="category-container">
+      <el-form :inline="true" :model="searchFormData" size="mini" style="width: 100%"
+        class="form-search">
+        <el-form-item label="分类名称：">
+          <el-input v-model="searchFormData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="状态：">
+          <el-select v-model.trim="searchFormData.status" filterable clearable>
+            <el-option label="禁用" :value="0"></el-option>
+            <el-option label="正常" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="btn-form-item">
+          <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
+          <el-button icon="el-icon-refresh" @click="onReset">重置</el-button>
+          <el-button icon="el-icon-circle-plus-outline" @click="addCategory">新增
+          </el-button>
+        </el-form-item>
+      </el-form>
     </div>
 
-    <category-edit v-if="dialogFormVisible" :title="title"
-      :dialogFormVisible.sync="dialogFormVisible" :isAddCategory.sync="isAddCategory"
-      :editFormData="editFormData" @refreshList="getCategoryListData"></category-edit>
+    <div class="category-container">
+      <!-- 数据表格的展示 -->
+      <el-table ref="singleTable" v-loading="loading" :data="
+        listData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      " highlight-current-row style="width: 100%" stripe>
+        <el-table-column align="center" :index="setIndex" type="index" min-width="50">
+        </el-table-column>
+        <el-table-column property="name" label="分类名称" min-width="100" align="center">
+        </el-table-column>
+        <el-table-column property="sort" label="排序" width="60" align="center">
+        </el-table-column>
+        <el-table-column property="remark" label="备注" align="center" min-width="200">
+        </el-table-column>
+        <el-table-column label="状态" align="center" width="80">
+          <template v-slot="{ row }">
+            <el-tag :type="row.status | statusFilter" size="small">
+              {{ row.status === 0 ? "禁用" : "正常" }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" min-width="150">
+          <template v-slot="{ row }">
+            <el-button size="mini" @click="handlerEdit(row)">编辑</el-button>
+            <el-button type="danger" size="mini" @click="handlerDel(row.id)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页功能模块 -->
+      <div class="pagination-wrapper">
+        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
+          :page-sizes="[10, 15, 20, 50]" :page-size.sync="pageSize"
+          layout="total, sizes, prev, pager, next, jumper" :total="total" background
+          popper-class="drop-down-box"></el-pagination>
+      </div>
+
+      <category-edit v-if="dialogFormVisible" :title="title"
+        :dialogFormVisible.sync="dialogFormVisible" :isAddCategory.sync="isAddCategory"
+        :editFormData="editFormData" @refreshList="getCategoryListData"></category-edit>
+    </div>
   </div>
 </template>
 
@@ -84,6 +92,7 @@ export default {
 			title: '',
 			isAddCategory: false,
 			editFormData: null,
+			loading: true,
 		}
 	},
 
@@ -97,6 +106,7 @@ export default {
 			const { data } = await getCategoryListData()
 			this.total = data.total
 			this.listData = data.records
+			this.loading = false
 		},
 		// 条件插叙列表数据
 		async queryCategory() {

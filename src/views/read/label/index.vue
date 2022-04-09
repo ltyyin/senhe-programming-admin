@@ -1,52 +1,60 @@
 <template>
-  <div class="label-container">
-    <el-form :inline="true" :model="searchFormData" size="mini" style="width: 100%"
-      class="form-search">
-      <el-form-item label="标签名称：">
-        <el-input v-model="searchFormData.name"></el-input>
-      </el-form-item>
-      <el-form-item label="分类名称：">
-        <el-select v-model.trim="searchFormData.categoryId" filterable clearable>
-          <el-option v-for="category of categoryList" :key="category.id" :label="category.name"
-            :value="category.id"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item class="btn-form-item">
-        <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
-        <el-button icon="el-icon-refresh" @click="onReset">重置</el-button>
-        <el-button icon="el-icon-circle-plus-outline" @click="addLabel">新增</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!-- 数据表格的展示 -->
-    <el-table ref="singleTable" :data="
-        listData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      " highlight-current-row style="width: 100%" stripe>
-      <el-table-column align="center" :index="setIndex" type="index" width="50"></el-table-column>
-      <el-table-column property="name" label="标签名称" min-width="100" align="center">
-      </el-table-column>
-      <el-table-column property="categoryName" label="分类名称" align="center" min-width="200">
-      </el-table-column>
-      <el-table-column label="操作" align="center" min-width="150">
-        <template v-slot="{ row }">
-          <el-button size="mini" @click="handlerEdit(row)">编辑</el-button>
-          <el-button type="danger" size="mini" @click="handlerDel(row.id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- 分页功能模块 -->
-    <div class="pagination-wrapper">
-      <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
-        :page-sizes="[10, 15, 20, 50]" :page-size.sync="pageSize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total" background
-        popper-class="drop-down-box"></el-pagination>
+  <div class="label-container-wrapper">
+    <div class="query-container">
+      <el-form :inline="true" :model="searchFormData" size="mini" style="width: 100%"
+        class="form-search">
+        <el-form-item label="标签名称：">
+          <el-input v-model="searchFormData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="分类名称：">
+          <el-select v-model.trim="searchFormData.categoryId" filterable clearable>
+            <el-option v-for="category of categoryList" :key="category.id"
+              :label="category.name" :value="category.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item class="btn-form-item">
+          <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
+          <el-button icon="el-icon-refresh" @click="onReset">重置</el-button>
+          <el-button icon="el-icon-circle-plus-outline" @click="addLabel">新增</el-button>
+        </el-form-item>
+      </el-form>
     </div>
 
-    <!-- 弹出的编辑框 -->
-    <label-edit v-if="dialogFormVisible" :title="title" :dialogFormVisible.sync="dialogFormVisible"
-      :isAdd.sync="isAdd" :categoryList="categoryList" @refreshList="getLabelListData"
-      :labelItem="labelItem" />
+    <div class="label-container">
+      <!-- 数据表格的展示 -->
+      <el-table ref="singleTable" v-loading="loading" :data="
+        listData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      " highlight-current-row style="width: 100%" stripe>
+        <el-table-column align="center" :index="setIndex" type="index" min-width="50">
+        </el-table-column>
+        <el-table-column property="name" label="标签名称" min-width="100" align="center">
+        </el-table-column>
+        <el-table-column property="categoryName" label="分类名称" align="center"
+          min-width="200">
+        </el-table-column>
+        <el-table-column label="操作" align="center" min-width="150">
+          <template v-slot="{ row }">
+            <el-button size="mini" @click="handlerEdit(row)">编辑</el-button>
+            <el-button type="danger" size="mini" @click="handlerDel(row.id)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页功能模块 -->
+      <div class="pagination-wrapper">
+        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
+          :page-sizes="[10, 15, 20, 50]" :page-size.sync="pageSize"
+          layout="total, sizes, prev, pager, next, jumper" :total="total" background
+          popper-class="drop-down-box"></el-pagination>
+      </div>
+
+      <!-- 弹出的编辑框 -->
+      <label-edit v-if="dialogFormVisible" :title="title"
+        :dialogFormVisible.sync="dialogFormVisible" :isAdd.sync="isAdd"
+        :categoryList="categoryList" @refreshList="getLabelListData"
+        :labelItem="labelItem" />
+    </div>
   </div>
 </template>
 
@@ -76,6 +84,7 @@ export default {
 			title: '',
 			isAdd: false,
 			labelItem: null,
+			loading: true,
 		}
 	},
 
@@ -90,6 +99,7 @@ export default {
 			const { data } = await getLabelListData()
 			this.total = data.total
 			this.listData = data.records
+			this.loading = false
 		},
 
 		async getNormalCategoryList() {
@@ -183,8 +193,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.label-container {
-	@include roundContainer;
-	min-width: 480px;
+.label-container-wrapper {
+	.query-container,
+	.label-container {
+		@include roundContainer;
+		min-width: 480px;
+	}
 }
 </style>

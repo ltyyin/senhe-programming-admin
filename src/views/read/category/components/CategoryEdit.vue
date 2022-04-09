@@ -1,7 +1,8 @@
 <template>
   <div class="container-edit">
     <el-dialog :title="title" :visible.sync="isVisible" custom-class="dialog-container">
-      <el-form :model="formData" ref="ruleForm" :rules="rules" label-position="left">
+      <el-form :model="formData" ref="ruleForm" :rules="rules" label-position="left"
+        size="small">
         <el-form-item label="分类名称：" prop="name" :label-width="formLabelWidth">
           <el-input v-model.trim="formData.name" autocomplete="off"></el-input>
         </el-form-item>
@@ -29,6 +30,7 @@
 
 <script>
 import { addCategory, updateCategory } from '@/api/category'
+import { copy } from '@/utils/copy'
 export default {
 	name: 'CategoryEdit',
 	props: {
@@ -55,7 +57,7 @@ export default {
 				if (val) {
 					this.formData = { name: '', status: null, sort: null, remark: '' }
 				} else {
-					this.formData = this.editFormData
+					this.formData = copy(this.editFormData)
 				}
 			},
 		},
