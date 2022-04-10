@@ -1,5 +1,5 @@
 <template>
-  <div class="category-container-wrapper">
+  <div class="course-container-wrapper">
     <div class="course-container">
       <el-form :inline="true" :model="searchFormData" size="mini" style="width: 100%"
         class="form-search">
@@ -31,13 +31,12 @@
       <el-table ref="singleTable" v-loading="loading" :data="
         dataList.slice((currentPage - 1) * pageSize, currentPage * pageSize)
       " highlight-current-row style="width: 100%" stripe>
-        <el-table-column align="center" :index="setIndex" type="index" min-width="50">
-        </el-table-column>
+        <el-table-column label="#" :index="setIndex" type="index" width="100"
+          align="center" />
 
-        <el-table-column property="title" label="课程标题" min-width="100" align="center">
-        </el-table-column>
+        <el-table-column property="title" label="课程标题" min-width="100" align="center" />
 
-        <el-table-column property="sort" label="封面图" width="135" align="center">
+        <el-table-column property="sort" label="封面图" min-width="135" align="center">
           <template v-slot="{ row }">
             <!-- <el-image class="image" :src="row.cover[0]" :preview-src-list="row.cover"
             fit="contain" /> -->
@@ -45,8 +44,8 @@
           </template>
         </el-table-column>
 
-        <el-table-column property="authorName" label="作者" align="center" min-width="100">
-        </el-table-column>
+        <el-table-column property="authorName" label="作者" align="center"
+          min-width="100" />
 
         <el-table-column label="原价" align="center" min-width="80">
           <template v-slot="{ row }">

@@ -15,13 +15,13 @@ export function throttling(fn, wait, immediate) {
     context = this;
     args = arguments;
     if (!timer) {
-      console.log("throttle, set");
+      console.log("节流阀：允许");
       if (immediate) {
         fn.apply(context, args);
       }
       run();
     } else {
-      console.log("throttle, ignore");
+      console.log("节流阀：忽略");
     }
   };
 }

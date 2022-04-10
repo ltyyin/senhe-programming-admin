@@ -34,14 +34,16 @@
       <el-table ref="singleTable" v-loading="loading"
         :data="dataList.slice((currentPage - 1) * pageSize, currentPage * pageSize)"
         highlight-current-row style="width: 100%" stripe>
-        <el-table-column align="center" :index="setIndex" type="index" min-width="50">
-        </el-table-column>
-        <el-table-column property="title" label="文章标题" min-width="100" align="center">
-        </el-table-column>
-        <el-table-column property="viewCount" label="浏览数" align="center" min-width="100">
-        </el-table-column>
-        <el-table-column property="thumhup" label="点赞数" align="center" min-width="100">
-        </el-table-column>
+        <el-table-column label="#" :index="setIndex" type="index" width="100"
+          align="center" />
+
+        <el-table-column property="title" label="文章标题" min-width="100" align="center" />
+
+        <el-table-column property="viewCount" label="浏览数" align="center"
+          min-width="100" />
+
+        <el-table-column property="thumhup" label="点赞数" align="center" min-width="100" />
+
         <el-table-column label="是否公开" align="center" min-width="80">
           <template v-slot="{ row }">
             <!-- 0: 不公开 1：公开 -->
@@ -59,7 +61,10 @@
         </el-table-column>
         <el-table-column label="时间" align="center" min-width="100">
           <template v-slot="{ row }">
-            <div>{{ row.updateDate | formatTime('YYYY-MM-DD') }}</div>
+            <div>
+              <i class="el-icon-time"></i>
+              {{ row.updateDate | formatTime('YYYY-MM-DD') }}
+            </div>
           </template>
         </el-table-column>
 

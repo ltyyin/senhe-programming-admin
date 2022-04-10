@@ -26,14 +26,15 @@
       <el-table ref="singleTable" v-loading="loading" :data="
         listData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
       " highlight-current-row style="width: 100%" stripe>
-        <el-table-column align="center" :index="setIndex" type="index" min-width="50">
-        </el-table-column>
-        <el-table-column property="name" label="分类名称" min-width="100" align="center">
-        </el-table-column>
-        <el-table-column property="sort" label="排序" width="60" align="center">
-        </el-table-column>
-        <el-table-column property="remark" label="备注" align="center" min-width="200">
-        </el-table-column>
+        <el-table-column label="#" align="center" :index="setIndex" type="index"
+          width="100" />
+
+        <el-table-column property="name" label="分类名称" min-width="100" align="center" />
+
+        <el-table-column property="sort" label="排序" width="60" align="center" />
+
+        <el-table-column property="remark" label="备注" align="center" min-width="200" />
+
         <el-table-column label="状态" align="center" width="80">
           <template v-slot="{ row }">
             <el-tag :type="row.status | statusFilter" size="small">

@@ -25,10 +25,11 @@
       <el-table ref="singleTable" v-loading="loading" :data="
         listData.slice((currentPage - 1) * pageSize, currentPage * pageSize)
       " highlight-current-row style="width: 100%" stripe>
-        <el-table-column align="center" :index="setIndex" type="index" min-width="50">
-        </el-table-column>
-        <el-table-column property="name" label="标签名称" min-width="100" align="center">
-        </el-table-column>
+        <el-table-column label="#" align="center" :index="setIndex" type="index"
+          width="100" />
+
+        <el-table-column property="name" label="标签名称" min-width="100" align="center" />
+
         <el-table-column property="categoryName" label="分类名称" align="center"
           min-width="200">
         </el-table-column>
