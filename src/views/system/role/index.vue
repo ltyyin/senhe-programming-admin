@@ -16,12 +16,10 @@
 
     <div class="role-container">
       <!-- 数据表格的展示 -->
-      <el-table ref="singleTable" v-loading="loading" :data="
-        dataList.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-      " highlight-current-row style="width: 100%" stripe>
+      <el-table ref="singleTable" v-loading="loading" :data="dataList"
+        highlight-current-row style="width: 100%" stripe>
 
-        <el-table-column align="center" label="#" :index="setIndex" type="index"
-          width="100" />
+        <el-table-column align="center" label="#" type="index" width="100" />
 
         <el-table-column property="name" label="角色名称" min-width="100" align="center" />
 
@@ -29,7 +27,8 @@
 
         <el-table-column label="操作" align="center" min-width="210">
           <template v-slot="{ row }">
-            <el-button size="mini" @click="handlerAdd(row)">分配权限</el-button>
+            <el-button size="mini" @click="handlerPower(row.powers)">分配权限
+            </el-button>
             <el-button type="info" plain size="mini" @click="handlerEdit(row)">编辑
             </el-button>
             <el-button type="danger" size="mini" @click="handlerDel(row.id)">删除
@@ -38,31 +37,33 @@
         </el-table-column>
       </el-table>
 
-      <!-- 分页功能模块 -->
-      <div class="pagination-wrapper">
-        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
-          :page-sizes="[10, 15, 20, 50]" :page-size.sync="pageSize"
-          layout="total, sizes, prev, pager, next, jumper" :total="total" background
-          popper-class="drop-down-box"></el-pagination>
-      </div>
-
       <!-- 编辑或新增组件 -->
       <role-edit v-if="dialogFormVisible" :dialogFormVisible.sync="dialogFormVisible"
         :title="title" :isAdd.sync="isAdd" :roleItem="roleItem"
         @refreshList="fetchRoleList" />
+
+      <privilege :showPrivilege.sync="showPrivilege" :powerMenuList="powerMenuList"
+        :rolePowers="rolePowers" @refreshList="fetchRoleList" />
     </div>
   </div>
 </template>
 
 <script>
-import { getRoleList, queryRole, deleteRole } from '@/api/role'
+import {
+	getRoleList,
+	queryRole,
+	deleteRole,
+	getPowerMenuList,
+} from '@/api/role'
 import { throttling } from '@/utils/limit-request'
-import RoleEdit from './components/roleEdit.vue'
+import RoleEdit from './components/RoleEdit'
+import Privilege from './components/Privilege'
 
 export default {
 	name: 'Role',
 	components: {
 		RoleEdit,
+		Privilege,
 	},
 	data() {
 		return {
@@ -70,19 +71,20 @@ export default {
 			searchFormData: {
 				name: '',
 			},
-			total: 0,
-			currentPage: 1,
-			pageSize: 10,
+			showPrivilege: false,
 			dialogFormVisible: false,
 			roleItem: {},
 			title: '',
 			isAdd: false,
 			loading: true,
+			powerMenuList: [],
+			rolePowers: [],
 		}
 	},
 
 	async created() {
 		this.fetchRoleList()
+		this.fetchPowerMenuList()
 	},
 
 	methods: {
@@ -104,6 +106,10 @@ export default {
 			const { data } = await queryRole(odds)
 			this.total = data.total
 			this.dataList = data.records
+		},
+		async fetchPowerMenuList() {
+			const { data } = await getPowerMenuList()
+			this.powerMenuList = data
 		},
 		// 表单提交
 		onSubmit: throttling(
@@ -141,7 +147,10 @@ export default {
 			return (this.currentPage - 1) * this.pageSize + index + 1
 		},
 		// 操作中的分配权限按钮处理函数
-		handlerAdd() {},
+		handlerPower(powers) {
+			this.rolePowers = powers
+			this.showPrivilege = true
+		},
 		// 操作中的编辑按钮处理函数
 		handlerEdit(row) {
 			this.title = '编辑角色'

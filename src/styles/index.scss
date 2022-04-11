@@ -67,9 +67,9 @@ div:focus {
 
 // 自定义公共样式
 .pagination-wrapper {
-  @include flexLayout($jc: center, $ai: center);
+  @include flexLayout($jc: flex-start, $ai: center);
   height: 60px;
-  // padding-left: 15px;
+  padding-left: 20px;
 }
 
 .form-search {

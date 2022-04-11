@@ -1,11 +1,222 @@
 <template>
-  <div>用户管理</div>
+  <div class="user-container-wrapper">
+    <div class="user-container">
+      <el-form :inline="true" :model="searchFormData" size="mini" style="width: 100%"
+        class="form-search">
+        <el-form-item label="用户名：">
+          <el-input v-model="searchFormData.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="账号：">
+          <el-input v-model="searchFormData.account"></el-input>
+        </el-form-item>
+
+        <el-form-item label="冻结：">
+          <el-select v-model.trim="searchFormData.isFreeze" filterable clearable>
+            <el-option label="无冻结" :value="0"></el-option>
+            <el-option label="已冻结" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item class="btn-form-item">
+          <el-button icon="el-icon-search" @click="onSubmit">查询</el-button>
+          <el-button icon="el-icon-refresh" @click="onReset">重置</el-button>
+          <!-- <el-button icon="el-icon-circle-plus-outline" @click="addCategory">新增</el-button> -->
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="user-container">
+      <!-- 数据表格的展示 -->
+      <el-table ref="singleTable" v-loading="loading" :data="
+        dataList.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+      " highlight-current-row style="width: 100%" stripe>
+        <el-table-column label="#" :index="setIndex" type="index" width="100"
+          align="center" />
+
+        <el-table-column property="userName" label="用户名" min-width="100" align="center" />
+
+        <el-table-column property="account" label="账号" min-width="100" align="center" />
+
+        <el-table-column property="account" label="最近登录" min-width="100" align="center">
+          <template v-slot="{row}">
+            <div>
+              <i class="el-icon-time"></i>
+              {{ row.latelyLoginDate | formatTime('YYYY-MM-DD')}}
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="是否冻结" align="center" min-width="80">
+          <template v-slot="{ row }">
+            <el-switch :value="row.isFreeze === 1" disabled></el-switch>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" align="center" min-width="210">
+          <template v-slot="{ row }">
+            <el-button size="mini" @click="handlerEdit(row)">编辑</el-button>
+            <el-button type="info" plain size="mini" @click="handlerSetRole(row)">设置角色
+            </el-button>
+            <el-button type="danger" size="mini" @click="handlerDel(row.id)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- 分页功能模块 -->
+      <div class="pagination-wrapper">
+        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage"
+          :page-sizes="[10, 15, 20, 50]" :page-size.sync="pageSize"
+          layout="total, sizes, prev, pager, next, jumper" :total="total" background
+          popper-class="drop-down-box"></el-pagination>
+      </div>
+
+      <user-edit :showEdit.sync="showEdit" :accountInfo="accountInfo"
+        @refreshList="fetchUserMList" />
+
+      <set-role :showSetRole.sync="showSetRole" :roleList="roleList"
+        :roleTotal="roleTotal" @refreshList="fetchUserMList" />
+    </div>
+  </div>
 </template>
 
 <script>
+import { getUserMList, queryUserM, deleteUserM } from '@/api/users'
+import { getRoleList } from '@/api/role'
+import { throttling } from '@/utils/limit-request'
+import UserEdit from './components/UserEdit'
+import SetRole from './components/SetRole'
+
 export default {
-  name: "userIndex",
-};
+	name: 'Course',
+	components: {
+		UserEdit,
+		SetRole,
+	},
+	data() {
+		return {
+			dataList: [],
+			searchFormData: {
+				name: '',
+				account: '',
+				isFreeze: '',
+			},
+			total: 0,
+			currentPage: 1,
+			pageSize: 10,
+			showEdit: false,
+			showSetRole: false,
+			accountInfo: {},
+			loading: true,
+			roleList: [],
+			roleTotal: 0,
+		}
+	},
+
+	async created() {
+		await this.fetchUserMList()
+		// 获取设置角色的菜单列表
+		const { data } = await getRoleList()
+		this.roleList = data.records
+		this.roleTotal = data.total
+	},
+
+	methods: {
+		// 初始化列表数据
+		async fetchUserMList() {
+			const { data } = await getUserMList()
+			this.total = data.total
+			this.dataList = data.records
+			this.loading = false
+		},
+		// 条件查询列表数据
+		async queryUser() {
+			let odds = {
+				name: this.searchFormData.name,
+				account: this.searchFormData.account,
+				isFreeze: this.searchFormData.isFreeze,
+			}
+			this.currentPage = 1
+			this.pageSize = 10
+			const { data } = await queryUserM(odds)
+			console.log(data)
+			this.total = data.total
+			this.dataList = data.records
+		},
+		// 表单提交
+		onSubmit: throttling(
+			function () {
+				if (
+					!this.searchFormData.name &&
+					!this.searchFormData.account &&
+					this.searchFormData.isFreeze === ''
+				) {
+					this.$message({
+						message: '请输入或选择内容后再查询！',
+						type: 'warning',
+					})
+					return
+				}
+				this.queryUser()
+			},
+			2000,
+			true
+		),
+		// 重置按钮处理函数
+		onReset: throttling(
+			function () {
+				this.currentPage = 1
+				this.pageSize = 10
+				this.searchFormData.name = ''
+				this.searchFormData.account = ''
+				this.searchFormData.isFreeze = ''
+				this.fetchUserMList()
+			},
+			2000,
+			true
+		),
+		setIndex(index) {
+			return (this.currentPage - 1) * this.pageSize + index + 1
+		},
+		// 操作编辑按钮处理函数
+		handlerEdit(item) {
+			this.accountInfo = item
+			this.showEdit = true
+		},
+		// 操作编辑按钮处理函数
+		handlerSetRole(item) {
+			this.showSetRole = true
+		},
+		// 操作删除按钮处理函数
+		handlerDel(id) {
+			this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(async () => {
+					await deleteUserM(id)
+					this.$message.success('删除课程成功！')
+					this.fetchUserMList()
+				})
+				.catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消删除',
+					})
+				})
+		},
+		handleCurrentChange(currentPage) {
+			this.currentPage = currentPage
+		},
+	},
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.user-container {
+	@include roundContainer;
+	min-width: 770px;
+}
+</style>

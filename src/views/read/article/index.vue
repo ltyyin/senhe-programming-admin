@@ -50,6 +50,7 @@
             <el-switch :value="row.isPublic === 1" disabled></el-switch>
           </template>
         </el-table-column>
+
         <el-table-column label="状态" align="center" min-width="80">
           <template v-slot="{ row }">
             <!-- 0:已删除, 1:未审核, 2:审核通过, 3:审核未通过 -->

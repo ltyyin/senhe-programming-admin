@@ -37,3 +37,17 @@ export function deleteRole(id) {
     method: "delete",
   });
 }
+
+export function getPowerMenuList() {
+  return request({
+    url: "/roles/power/list",
+    method: "get",
+  });
+}
+
+export function updateRolePowers() {
+  return request({
+    url: "/roles/modify/power",
+    method: "patch",
+  });
+}
