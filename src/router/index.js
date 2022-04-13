@@ -33,7 +33,7 @@ import Layout from "@/layout";
 export const constantRoutes = [
   {
     path: "/login",
-    component: () => import("@/views/login/index"),
+    component: () => import("@/views/login/login"),
     hidden: true,
   },
 
@@ -53,6 +53,24 @@ export const constantRoutes = [
         name: "Home",
         component: () => import("@/views/home/"),
         meta: { title: "首页", icon: "el-icon-s-home" },
+      },
+    ],
+  },
+
+  // banner管理路由
+  {
+    path: "/banner",
+    component: Layout,
+    children: [
+      {
+        path: "",
+        name: "Banner",
+        component: () => import("@/views/banner/"),
+        meta: {
+          title: "轮播管理",
+          icon: "el-icon-picture-outline",
+          noCache: false,
+        },
       },
     ],
   },
@@ -123,11 +141,17 @@ export const constantRoutes = [
         component: () => import("@/views/system/role/"),
         meta: { title: "角色管理", icon: "el-icon-files" },
       },
+    ],
+  },
+
+  // 跳转外网
+  {
+    path: "senhe",
+    component: Layout,
+    children: [
       {
-        path: "menu",
-        name: "Menu",
-        component: () => import("@/views/system/menu/"),
-        meta: { title: "菜单管理", icon: "el-icon-s-operation" },
+        path: "senhe",
+        meta: { title: "森和编程", icon: "el-icon-link" },
       },
     ],
   },

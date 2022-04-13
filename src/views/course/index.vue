@@ -131,9 +131,11 @@ export default {
 	methods: {
 		// 初始化列表数据
 		async fetchCourseList() {
-			const { data } = await getCourseList()
-			this.total = data.total
-			this.dataList = data.records
+			try {
+				const { data } = await getCourseList()
+				this.total = data.total
+				this.dataList = data.records
+			} catch (err) {}
 			this.loading = false
 		},
 		// 条件查询列表数据

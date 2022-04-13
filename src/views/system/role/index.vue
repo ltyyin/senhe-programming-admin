@@ -90,9 +90,11 @@ export default {
 	methods: {
 		// 初始化列表数据
 		async fetchRoleList() {
-			const { data } = await getRoleList()
-			this.total = data.total
-			this.dataList = data.records
+			try {
+				const { data } = await getRoleList()
+				this.total = data.total
+				this.dataList = data.records
+			} catch (error) {}
 			this.loading = false
 		},
 		// 条件查询列表数据

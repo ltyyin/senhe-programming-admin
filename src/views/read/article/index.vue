@@ -133,9 +133,11 @@ export default {
 
 	methods: {
 		async fetchArticleList() {
-			const { data } = await getArticleList()
-			this.total = data.total
-			this.dataList = data.records
+			try {
+				const { data } = await getArticleList()
+				this.total = data.total
+				this.dataList = data.records
+			} catch (error) {}
 			this.loading = false
 		},
 		async queryArticle() {

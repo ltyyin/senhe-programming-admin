@@ -125,9 +125,12 @@ export default {
 	methods: {
 		// 初始化列表数据
 		async fetchUserMList() {
-			const { data } = await getUserMList()
-			this.total = data.total
-			this.dataList = data.records
+			try {
+				const { data } = await getUserMList()
+				this.total = data.total
+				this.dataList = data.records
+			} catch (err) {}
+
 			this.loading = false
 		},
 		// 条件查询列表数据
@@ -140,7 +143,6 @@ export default {
 			this.currentPage = 1
 			this.pageSize = 10
 			const { data } = await queryUserM(odds)
-			console.log(data)
 			this.total = data.total
 			this.dataList = data.records
 		},

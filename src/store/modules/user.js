@@ -1,5 +1,10 @@
-import { login, logout, getInfo } from "@/api/user";
-import { getToken, setToken, removeToken } from "@/utils/auth";
+import { login, getInfo } from "@/api/user";
+import {
+  getToken,
+  setToken,
+  removeToken,
+  logoutRemoveToken,
+} from "@/utils/auth";
 import { resetRouter } from "@/router";
 
 const getDefaultState = () => {
@@ -33,15 +38,15 @@ const actions = {
     const { username, password } = userInfo;
     const data = await login({
       username: username.trim(),
-      password: password,
+      password: password.trim(),
     });
 
     if (data.code === 20000) {
       commit("SET_TOKEN", data.token);
-      setToken(data.token);
+      setToken(data.token, data.refreshToken);
       return "ok";
     } else {
-      Promise.reject(new Error("login fail"));
+      Promise.reject(new Error("登录失败"));
     }
   },
 
@@ -58,24 +63,22 @@ const actions = {
   },
 
   // user logout
-  async logout({ commit, state }) {
-    try {
-      await logout();
-      removeToken(); // must remove  token  first
-      resetRouter();
-      commit("RESET_STATE");
-    } catch (err) {
-      return err;
-    }
+  logout({ commit, state }) {
+    logoutRemoveToken(); // 删除存储在cookie中的token
+    resetRouter();
+    commit("RESET_STATE");
+  },
+
+  // refresh token
+  async refreshToken({ commit }) {
+    commit("SET_TOKEN");
+    commit("RESET_STATE");
   },
 
   // remove token
-  resetToken({ commit }) {
-    return new Promise((resolve) => {
-      removeToken(); // must remove  token  first
-      commit("RESET_STATE");
-      resolve();
-    });
+  async resetToken({ commit }) {
+    removeToken(); // must remove  token  first
+    commit("RESET_STATE");
   },
 };
 

@@ -97,9 +97,11 @@ export default {
 	methods: {
 		// 初始化列表数据
 		async getLabelListData() {
-			const { data } = await getLabelListData()
-			this.total = data.total
-			this.listData = data.records
+			try {
+				const { data } = await getLabelListData()
+				this.total = data.total
+				this.listData = data.records
+			} catch (error) {}
 			this.loading = false
 		},
 

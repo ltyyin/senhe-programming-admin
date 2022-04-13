@@ -104,9 +104,11 @@ export default {
 	methods: {
 		// 初始化列表数据
 		async getCategoryListData() {
-			const { data } = await getCategoryListData()
-			this.total = data.total
-			this.listData = data.records
+			try {
+				const { data } = await getCategoryListData()
+				this.total = data.total
+				this.listData = data.records
+			} catch (error) {}
 			this.loading = false
 		},
 		// 条件插叙列表数据
