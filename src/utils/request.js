@@ -1,5 +1,4 @@
 import axios from "axios";
-import { MessageBox, Message } from "element-ui";
 import store from "@/store";
 import { getToken } from "@/utils/auth";
 import authService from "./authRequest";
@@ -64,27 +63,6 @@ service.interceptors.response.use(
       });
       return;
     }
-
-    // if (res.status === 401 && noLock) {
-    //   noLock = false;
-    //   setTimeout(() => {
-    //     noLock = true;
-    //   }, 2000);
-    //   MessageBox.confirm(
-    //     "登录过时，您可以取消以留在此页面，或重新登录。",
-    //     "确定信息",
-    //     {
-    //       confirmButtonText: "重新登录",
-    //       cancelButtonText: "关闭",
-    //       type: "warning",
-    //     }
-    //   ).then(() => {
-    //     store.dispatch("user/resetToken").then(() => {
-    //       location.reload();
-    //     });
-    //   });
-    //   return;
-    // }
 
     if (res.status !== 401 && res.status !== 405) {
       console.log(res.status !== 401 || res.status !== 405);
